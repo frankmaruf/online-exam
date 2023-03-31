@@ -12,7 +12,7 @@ from datetime import datetime
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.conf import settings
-from django.db.models import Subquery
+from django.db.models import Subquery, OuterRef, CharField
 # Create your views here.
 
 
@@ -216,16 +216,15 @@ def add_new_question(request):
             mcq_option4 = request.POST.get('mcq_option4').strip() if request.POST.get('mcq_option4') else None
 
             if right_mcq_option == 'mcq_option1':
-                answer = mcq_option1
+                right_mcq_option = "mcq_option1"
             elif right_mcq_option == 'mcq_option2':
-                answer = mcq_option2
+                right_mcq_option = "mcq_option2"
             elif right_mcq_option == 'mcq_option3':
-                answer = mcq_option3
+                right_mcq_option = "mcq_option3"
             elif right_mcq_option == 'mcq_option4':
-                answer = mcq_option4.strip()
-            else:
-                answer = None
-        else:
+                right_mcq_option = "mcq_option4"
+
+        elif question_type == "MCQ":
             answer = request.POST.get('answer').strip()
 
         new_question = Question.objects.create(
@@ -261,7 +260,7 @@ def edit_question(request,pk):
         mcq_option4 = None
         answer = None
         question_type = request.POST.get('question_type')
-        question = request.POST.get('question')
+        question = request.POST.get('question').strip()
         subject = request.POST.get('subject')
 
         if question_object.question != question:
@@ -272,12 +271,22 @@ def edit_question(request,pk):
 
         if question_type == "MCQ":
             right_mcq_option = request.POST.get('right_mcq_option') if request.POST.get('right_mcq_option') else None
-            mcq_option1      = request.POST.get('mcq_option1').strip() if request.POST.get('mcq_option1') else None
-            mcq_option2      = request.POST.get('mcq_option2').strip() if request.POST.get('mcq_option2') else None
-            mcq_option3      = request.POST.get('mcq_option3').strip() if request.POST.get('mcq_option3') else None
-            mcq_option4      = request.POST.get('mcq_option4').strip() if request.POST.get('mcq_option4') else None
-        else:
-            answer = request.POST.get('answer')
+            mcq_option1 = request.POST.get('mcq_option1').strip() if request.POST.get('mcq_option1') else None
+            mcq_option2 = request.POST.get('mcq_option2').strip() if request.POST.get('mcq_option2') else None
+            mcq_option3 = request.POST.get('mcq_option3').strip() if request.POST.get('mcq_option3') else None
+            mcq_option4 = request.POST.get('mcq_option4').strip() if request.POST.get('mcq_option4') else None
+
+            if right_mcq_option == 'mcq_option1':
+                right_mcq_option = "mcq_option1"
+            elif right_mcq_option == 'mcq_option2':
+                right_mcq_option = "mcq_option2"
+            elif right_mcq_option == 'mcq_option3':
+                right_mcq_option = "mcq_option3"
+            elif right_mcq_option == 'mcq_option4':
+                right_mcq_option = "mcq_option4"
+
+        elif question_type == "MCQ":
+            answer = request.POST.get('answer').strip()
 
         update_question = Question.objects.filter(id=pk).update(
             right_mcq_option = right_mcq_option,
@@ -288,7 +297,7 @@ def edit_question(request,pk):
             mcq_option4      = mcq_option4,
             question         = question,
             answer           = answer,
-            subject_id          = subject
+            subject_id       = subject
         )
         messages.success(request,"successfully question has been update")
         return redirect("questions")
@@ -344,15 +353,20 @@ def exam(request):
 
             for question in questions:
                 answer = request.POST.get(str(f"question_{question.id}"))
+                select_mcq = request.POST.get(f"btnradio_{question.id}")
                 selected_answer_examinee = Examinee.objects.get(user=request.user)
                 SelectedAnswer.objects.create(
                     examinee=selected_answer_examinee,
                     question=question,
-                    selected_mcq_option=answer if question.question_type == 'MCQ' else None,
+                    selected_mcq_option=select_mcq if question.question_type == 'MCQ' else None,
                     selected_long_answer=answer if question.question_type == 'Long Answer' else None
                     )
-                if answer == question.right_mcq_option or answer.lower().strip() == question.answer.lower().strip():
-                    correct_answers.append(question.id)
+                if question.question_type == 'MCQ':
+                    if select_mcq == question.right_mcq_option:
+                        correct_answers.append(question.id)
+                if question.question_type == 'Long Answer':
+                    if answer == question.answer:
+                        correct_answers.append(question.id)
                 else:
                     incorrect_answers.append(question.id)
 
@@ -370,26 +384,26 @@ def exam(request):
 def exam_result(request):
     check_teacher = Teacher.objects.filter(user_id=request.user.id).exists()
     if check_teacher:
-        messages.warning(request,"You are not allow to see this page")
+        messages.warning(request, "You are not allowed to see this page")
         return redirect("index")
 
     examinee = Examinee.objects.get(user=request.user)
     if not examinee.has_completed_exam:
-        messages.warning(request,"You haven't attend the exam please attend the exam")
+        messages.warning(request, "You haven't attended the exam. Please attend the exam.")
         return redirect('exam')
 
-    score = Examinee.objects.get(user=request.user).score
-    selected_answers = SelectedAnswer.objects.filter(examinee=examinee)
-    questions = []
-    for answer in selected_answers:
-        question = answer.question
-        if question not in questions:
-            questions.append(question)
+    selected_answers = SelectedAnswer.objects.filter(
+    examinee=examinee,
+        question=OuterRef('pk')
+        ).order_by('-id')
+
+    questions = Question.objects.all().annotate(
+        selected_answer=Subquery(selected_answers.values('selected_mcq_option')[:1], output_field=CharField()))
+    
     context = {
-            'score': score,
-            "selected_answers":selected_answers,
-            "examinee":examinee,
-            "questions" : questions
+        'score': examinee.score,
+        "examinee": examinee,
+        "questions": questions
         }
     return render(request, 'exam_result.html', context)
 

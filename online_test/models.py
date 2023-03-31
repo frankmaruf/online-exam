@@ -38,12 +38,10 @@ class Examinee(models.Model):
 class SelectedAnswer(models.Model):
     examinee            = models.ForeignKey(Examinee, on_delete=models.CASCADE)
     question            = models.ForeignKey(Question, on_delete=models.CASCADE)
-    selected_mcq_option = models.CharField(max_length=25, null=True, choices=(
-        ('mcq_option1', 'Option 1'),
-        ('mcq_option1', 'Option 2'),
-        ('mcq_option1', 'Option 3'),
-        ('mcq_option1', 'Option 4')
-    ))
+    selected_mcq_option = models.CharField(max_length=25, null=True, choices=(('mcq_option1', 'Option 1'),
+         ('mcq_option2', 'Option 2'),
+         ('mcq_option3', 'Option 3'),
+         ('mcq_option4', 'Option 4')))
     selected_long_answer = models.TextField(null=True)
 
     def __str__(self):

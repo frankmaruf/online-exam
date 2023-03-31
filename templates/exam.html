@@ -12,19 +12,19 @@
                       <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
                           {% with radio_counter=forloop.counter %}
                           <div class="col">
-                            <input type="radio" class="btn-check" name="question_{{question.id}}" id="btnradio{{ radio_counter }}_1" value="{{ question.mcq_option1 }}" autocomplete="off">
+                            <input type="radio" class="btn-check" name="btnradio_{{question.id}}" id="btnradio{{ radio_counter }}_1" value="mcq_option1" autocomplete="off">
                             <label class="btn btn-outline-primary" for="btnradio{{ radio_counter }}_1">{{question.mcq_option1}}</label>
                           </div>
                           <div class="col">
-                            <input type="radio" class="btn-check" name="question_{{question.id}}" id="btnradio{{ radio_counter }}_2" value="{{ question.mcq_option2 }}" autocomplete="off">
+                            <input type="radio" class="btn-check" name="btnradio_{{question.id}}" id="btnradio{{ radio_counter }}_2" value="mcq_option2" autocomplete="off">
                             <label class="btn btn-outline-primary" for="btnradio{{ radio_counter }}_2">{{question.mcq_option2}}</label>
                           </div>
                           <div class="col">
-                            <input type="radio" class="btn-check" name="question_{{question.id}}" id="btnradio{{ radio_counter }}_3" value="{{ question.mcq_option3 }}" autocomplete="off">
+                            <input type="radio" class="btn-check" name="btnradio_{{question.id}}" id="btnradio{{ radio_counter }}_3" value="mcq_option3" autocomplete="off">
                             <label class="btn btn-outline-primary" for="btnradio{{ radio_counter }}_3">{{question.mcq_option3}}</label>
                           </div>
                           <div class="col">
-                            <input type="radio" class="btn-check" name="question_{{question.id}}" id="btnradio{{ radio_counter }}_4" value="{{ question.mcq_option4 }}" autocomplete="off">
+                            <input type="radio" class="btn-check" name="btnradio_{{question.id}}" id="btnradio{{ radio_counter }}_4" value="mcq_option4" autocomplete="off">
                             <label class="btn btn-outline-primary" for="btnradio{{ radio_counter }}_4">{{question.mcq_option4}}</label>
                           </div>
                           {% endwith %}
