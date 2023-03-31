@@ -105,8 +105,10 @@
                         <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
                             <i class="fa fa-users fa-3x text-primary"></i>
                             <div class="ms-3">
-                                <p class="mb-2">EXAMINEE</p>
-                                <h6 class="mb-0">3</h6>
+                                <a href="#">
+                                    <p class="mb-2">EXAMINEE</p>
+                                <h6 class="mb-0">{{examinee}}</h6>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -114,8 +116,10 @@
                         <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
                             <i class="fa fa-book fa-3x text-primary"></i>
                             <div class="ms-3">
-                                <p class="mb-2">TOTAL SUBJECT</p>
-                                <h6 class="mb-0">1</h6>
+                                <a href="{% url 'subjects' %}">
+                                    <p class="mb-2">TOTAL SUBJECT</p>
+                                <h6 class="mb-0">{{total_subject}}</h6>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -123,8 +127,10 @@
                         <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
                             <i class="fa fa-question-circle fa-3x text-primary"></i>
                             <div class="ms-3">
-                                <p class="mb-2">TOTAL QUESTIONS</p>
-                                <h6 class="mb-0">5</h6>
+                                <a href="{% url 'questions' %}">
+                                    <p class="mb-2">TOTAL QUESTIONS</p>
+                                <h6 class="mb-0">{{total_question}}</h6>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -132,8 +138,10 @@
                         <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
                             <i class="fa fa-history fa-3x text-primary"></i>
                             <div class="ms-3">
-                                <p class="mb-2">LATEST QUESTIONS</p>                                </p>
-                                <h6 class="mb-0">5</h6>
+                                <a href="{% url 'questions' %}">
+                                    <p class="mb-2">LATEST QUESTIONS</p>                                </p>
+                                <h6 class="mb-0">{{latest_question}}</h6>
+                                </a>
                             </div>
                         </div>
                     </div>

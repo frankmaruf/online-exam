@@ -99,9 +99,26 @@ def signup(request):
     return render(request, 'authenticate/signup.html')
 
 @login_required
-@permission_required('online_test.add_subject')
 def dashboard(request):
-    return render(request,'dashmin\index.html')
+    examinee = Examinee.objects.count()
+    total_question = Question.objects.count()
+
+    try:
+        latest_subject = Subject.objects.last()
+        total_subject = Subject.objects.count()
+        latest_question = Question.objects.filter(subject_id=latest_subject.pk).count() if latest_subject is not None else Question.objects.count()
+    except Subject.DoesNotExist:
+        latest_subject = None
+        latest_question = None
+        total_subject = 0
+
+    context = {
+        'examinee': examinee,
+        'total_subject': total_subject,
+        'total_question': total_question,
+        'latest_question': latest_question or 0,
+    }
+    return render(request,'dashmin\index.html',context)
 
 
 @login_required
