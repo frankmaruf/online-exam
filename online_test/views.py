@@ -336,12 +336,12 @@ def exam(request):
         if request.method == 'POST':
             correct_answers = []
             incorrect_answers = []
-            
+
             check_teacher = Teacher.objects.filter(id=request.user.id).exists()
             if check_teacher:
                 messages.warning(request,"You can't participate to this exam")
                 return redirect("index")
-            
+
             for question in questions:
                 answer = request.POST.get(str(f"question_{question.id}"))
                 selected_answer_examinee = Examinee.objects.get(user=request.user)
@@ -368,21 +368,30 @@ def exam(request):
 
 @login_required
 def exam_result(request):
-    if request.user.is_authenticated:
-        score = Examinee.objects.get(user=request.user).score
+    check_teacher = Teacher.objects.filter(user_id=request.user.id).exists()
+    if check_teacher:
+        messages.warning(request,"You are not allow to see this page")
+        return redirect("index")
 
-        context = {'score': score}
-        return render(request, 'exam_result.html', context)
+    examinee = Examinee.objects.get(user=request.user)
+    if not examinee.has_completed_exam:
+        messages.warning(request,"You haven't attend the exam please attend the exam")
+        return redirect('exam')
 
-@login_required
-def exam_result(request):
-    if request.user.is_authenticated:
-        examinee = Examinee.objects.get(user=request.user)
-        selected_answers = SelectedAnswer.objects.filter(examinee=examinee)
-
-        context = {'examinee': examinee, 'selected_answers': selected_answers}
-        return render(request, 'exam_result.html', context)
-
+    score = Examinee.objects.get(user=request.user).score
+    selected_answers = SelectedAnswer.objects.filter(examinee=examinee)
+    questions = []
+    for answer in selected_answers:
+        question = answer.question
+        if question not in questions:
+            questions.append(question)
+    context = {
+            'score': score,
+            "selected_answers":selected_answers,
+            "examinee":examinee,
+            "questions" : questions
+        }
+    return render(request, 'exam_result.html', context)
 
 def exam_results(request):
     # if request.user.is_authenticated:

@@ -3,11 +3,38 @@
 <section>
     <div class="container">
         <div class="row align-items-center">
-          <div class="col-md-9 col-lg-6 col-xl-5">
-              <h4>Test From Exam Result Page</h4>
-              <p>{% lorem 9 w random %}</p>
-              <p>{% lorem 9 w random %}</p>
-          </div>
+              {% for question in questions %}
+              {% if question.question_type == 'MCQ' %}
+                  <div class="row align-items-center">
+                      <p>{{question.question}}</p>
+                      <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                          {% with radio_counter=forloop.counter %}
+                          <div class="col">
+                            <input type="radio" class="btn-check" name="question_{{question.id}}" id="btnradio{{ radio_counter }}_1" value="{{ question.mcq_option1 }}" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="btnradio{{ radio_counter }}_1">{{question.mcq_option1}}</label>
+                          </div>
+                          <div class="col">
+                            <input type="radio" class="btn-check" name="question_{{question.id}}" id="btnradio{{ radio_counter }}_2" value="{{ question.mcq_option2 }}" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="btnradio{{ radio_counter }}_2">{{question.mcq_option2}}</label>
+                          </div>
+                          <div class="col">
+                            <input type="radio" class="btn-check" name="question_{{question.id}}" id="btnradio{{ radio_counter }}_3" value="{{ question.mcq_option3 }}" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="btnradio{{ radio_counter }}_3">{{question.mcq_option3}}</label>
+                          </div>
+                          <div class="col">
+                            <input type="radio" class="btn-check" name="question_{{question.id}}" id="btnradio{{ radio_counter }}_4" value="{{ question.mcq_option4 }}" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="btnradio{{ radio_counter }}_4">{{question.mcq_option4}}</label>
+                          </div>
+                          {% endwith %}
+                      </div>
+                  </div>
+              {% elif question.question_type == 'Long Answer' %}
+                  <div class="row align-items-center">
+                      <p>{{question.question}}</p>
+                      <input type="text" id="form3Example4" class="form-control form-control-lg" autocomplete="off" disabled name="question_{{question.id}}" required />
+                  </div>
+              {% endif %}
+          {% endfor %}
         </div>
     </div>
 </section>
