@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% load static %}
+    <meta charset="utf-8">
+    <title>DASHMIN - Bootstrap Admin Template</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="{% static 'css/owl.carousel.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/tempusdominus-bootstrap-4.min.css' %}" rel="stylesheet" />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <title>{% block title %}Dashboard{% endblock %}</title>
+</head>
+
+<body>
+    <div class="container-xxl position-relative bg-white d-flex p-0">
+        <!-- Spinner Start -->
+        <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <!-- Spinner End -->
+
+
+        <!-- Sidebar Start -->
+        <div class="sidebar pe-4 pb-3">
+            <nav class="navbar bg-light navbar-light">
+                <a href="{% url 'dashboard' %}" class="navbar-brand mx-4 mb-3">
+                    <h3 class="text-primary"><i class="fa fa-hashtag me-2"></i>Dashboard</h3>
+                </a>
+                <div class="d-flex align-items-center ms-4 mb-4">
+                    <div class="ms-3">
+                        <h6 class="mb-0">{{request.user.username}}</h6>
+                        <span>Teacher</span>
+                    </div>
+                </div>
+                <div class="navbar-nav w-100">
+                    <a href="{% url 'index' %}" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Homepage</a>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>Subjects</a>
+                        <div class="dropdown-menu bg-transparent border-0">
+                            <a href="{% url 'add_new_subject' %}" class="dropdown-item">Add New Subjects</a>
+                            <a href="{% url 'subjects' %}" class="dropdown-item">All Subjects</a>
+                        </div>
+                    </div>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>Question</a>
+                        <div class="dropdown-menu bg-transparent border-0">
+                            <a href="{% url 'add_new_question' %}" class="dropdown-item">Add New Questions</a>
+                            <a href="{% url 'questions' %}" class="dropdown-item">All Questions</a>
+                        </div>
+                    </div>
+                    <a href="{% url 'exam_results' %}" class="nav-item nav-link"><i class="far fa-file-alt me-2"></i>Examinee Results</a>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="far fa-file-alt me-2"></i>.....</a>
+                        <div class="dropdown-menu bg-transparent border-0">
+                            <a href="{% url 'logout_user' %}" class="dropdown-item">Sign Out</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <!-- Sidebar End -->
+
+
+        <!-- Content Start -->
+        <div class="content">
+            {% if messages %}
+    {% for message in messages %}
+      <div class="container">
+        <div class="alert alert-{{ message.tags }} alert-dismissable" role="alert">
+          <button onclick="removeAlert(this)" class="btn-close" data-dismiss="alert"></button>
+          {{ message }}
+        </div>
+      </div>
+    {% endfor %}
+  {% endif %}
+  {% block body %}
+            <!-- Sale & Revenue Start -->
+            <div class="container-fluid pt-4 px-4">
+                <div class="row g-4">
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                            <i class="fa fa-users fa-3x text-primary"></i>
+                            <div class="ms-3">
+                                <p class="mb-2">EXAMINEE</p>
+                                <h6 class="mb-0">3</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                            <i class="fa fa-book fa-3x text-primary"></i>
+                            <div class="ms-3">
+                                <p class="mb-2">TOTAL SUBJECT</p>
+                                <h6 class="mb-0">1</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                            <i class="fa fa-question-circle fa-3x text-primary"></i>
+                            <div class="ms-3">
+                                <p class="mb-2">TOTAL QUESTIONS</p>
+                                <h6 class="mb-0">5</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                            <i class="fa fa-history fa-3x text-primary"></i>
+                            <div class="ms-3">
+                                <p class="mb-2">LATEST QUESTIONS</p>                                </p>
+                                <h6 class="mb-0">5</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Sale & Revenue End -->
+
+
+            <!-- Top Examinee 10 -->
+            <div class="container-fluid pt-4 px-4">
+                <div class="bg-light text-center rounded p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <h6 class="mb-0">Top 10 Examinee</h6>
+                        <a href="">Show All</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table text-start align-middle table-bordered table-hover mb-0">
+                            <thead>
+                                <tr class="text-dark">
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Score</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Md. Abdullah Al Maruf</td>
+                                    <td>thefrankmaruf@mail.com</td>
+                                    <td>90</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- Recent Sales End -->
+
+
+            <!-- Widgets Start -->
+            <div class="container-fluid pt-4 px-4">
+                <a href="{% url 'send_mail_to_subscriber' %}" class="btn btn-primary ms-2">Send Mail To Subscriber</a>
+            </div>
+            <!-- Widgets End -->
+
+
+            <!-- Footer Start -->
+            <div class="container-fluid pt-4 px-4">
+                <div class="bg-light rounded-top p-4">
+                    <div class="row">
+                        <div class="col-12 col-sm-6 text-center text-sm-start">
+                            &copy; <a href="{% url 'index' %}">For Education</a>, All Right Reserved. 
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Footer End -->
+            {% endblock %}
+        </div>
+        <!-- Content End -->
+
+
+        <!-- Back to Top -->
+        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    </div>
+    <script>
+        function removeAlert(element) {
+          element.parentNode.parentNode.removeChild(element.parentNode);
+        }
+      </script>
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'chart/chart.min.js' %}"></script>
+    <script src="{% static 'easing/easing.min.js' %}"></script>
+    <script src="{% static 'waypoints/waypoints.min.js' %}"></script>
+    <script src="{% static 'owlcarousel/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'tempusdominus/js/moment.min.js' %}"></script>
+    <script src="{% static 'tempusdominus/js/moment-timezone.min.js' %}"></script>
+    <script src="{% static 'tempusdominus/js/tempusdominus-bootstrap-4.min.js' %}"></script>
+
+    <!-- Template Javascript -->
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+
+</html>

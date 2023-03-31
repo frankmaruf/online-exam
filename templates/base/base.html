@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  {% load static %}
+  <head>
+     <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+     <script src="{% static 'js/bootstrap.js' %}"></script>
+     <script src="{% static 'js/jquery-3.6.3.min.js' %}"></script>
+     <script src="{% static 'js/bootstrap-navbar.js' %}"></script>
+     <link href="{% static 'css/theme.css' %}" rel="stylesheet"/>
+     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+     <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+
+
+     <!--    Favicons-->
+    <!-- ===============================================-->
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static "img/favicons/apple-touch-icon.png" %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static "img/favicons/favicon-32x32.png" %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static "img/favicons/favicon-16x16.png" %}">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static "img/favicons/favicon.ico" %}">
+    <link rel="manifest" href="{% static "img/favicons/manifest.json" %}">
+    <meta name="msapplication-TileImage" content="{% static "img/favicons/mstile-150x150.png" %}">
+    <meta name="theme-color" content="#ffffff">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}For Education{% endblock %}</title>
+  </head>
+  <body>
+
+    <main class="main" id="top">
+
+    {% include 'navbar/navbar.html' %}
+
+    {% if messages %}
+    {% for message in messages %}
+      <div class="container">
+        <div class="alert alert-{{ message.tags }} alert-dismissable" role="alert">
+          <button onclick="removeAlert(this)" class="btn-close" data-dismiss="alert"></button>
+          {{ message }}
+        </div>
+      </div>
+    {% endfor %}
+  {% endif %}
+      
+      {% block body %}
+      <section class="pt-3 bg-600" id="home">
+        <div class="container">
+          <div class="row align-items-center">
+            <div class="col-md-5 col-lg-6 order-0 order-md-1 text-end"><img class="pt-7 pt-md-0 w-100" src="{% static 'img/hero-header.png' %}" width="470" alt="hero-header" /></div>
+            <div class="col-md-7 col-lg-6 text-md-start text-center py-6">
+              <h4 class="fw-bold font-sans-serif">Become Master</h4>
+              <h1 class="fs-6 fs-xl-7 mb-5">We offers a variety of pre-defined questions to help you test your knowledge</h1><a class="btn btn-primary me-2" href="{% url "exam" %}" role="button">Teke A Test</a><a class="btn btn-outline-secondary" href="#read-more" role="button">Read more</a>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="pt-0">
+
+        <div class="container">
+          <div class="row h-100 align-items-center">
+            <div class="col-md-12 col-lg-6 h-100">
+              <div class="card card-span text-white h-100"><img class="w-100" src="{% static "img/student-feedback.png" %}" alt="..." />
+                <div class="card-body px-xl-5 px-md-3 pt-0">
+                  <div class="d-flex flex-column align-items-center bg-200" style="margin-top:-2.4rem;">
+                    <h5 class="mt-3 mb-0">Kimmie Vo</h5>
+                    <p class="text-muted">MIT Student</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-6 h-100">
+              <h1 class="my-4">Successful Student<br /><span class="text-primary">Feedback</span></h1>
+              <p>I recently used the multiple-choice question feature on this platform to help me study for an upcoming exam, and I was blown away by how much it improved my knowledge and skills. The pre-defined questions covered a wide range of topics, and the format was easy to navigate and use. I particularly appreciated the immediate feedback provided after each question, which helped me identify areas where I needed to focus my study efforts. Thanks to this platform, I feel much more confident and prepared for my exam. I would definitely recommend this platform to anyone looking to improve their knowledge and skills in various fields.</p>
+            </div>
+          </div>
+        </div>
+        <!-- end of .container-->
+
+      </section>
+      <!-- <section> close ============================-->
+      <!-- ============================================-->
+
+
+      <section>
+        <div class="bg-holder" style="background-image:url({% static "img/funfacts-2-bg.png" %});background-position:center;background-size:cover;">
+        </div>
+        <!--/.bg-holder-->
+
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-6 col-lg-3 text-center mb-5"><img src="{% static "img/published.png" %}" height="100" alt="..." />
+              <h1 class="my-2">{{examinee}}</h1>
+              <p class="text-info fw-bold">EXAMINEE</p>
+            </div>
+            <div class="col-sm-6 col-lg-3 text-center mb-5"><img src="{% static "img/instructors.png" %}" height="100" alt="..." />
+              <h1 class="my-2">{{total_subject}}</h1>
+              <p class="text-info fw-bold">TOTAL SUBJECT</p>
+            </div>
+            <div class="col-sm-6 col-lg-3 text-center mb-5"><img src="{% static "img/learners.png" %}" height="100" alt="..." />
+              <h1 class="my-2">{{total_question}}</h1>
+              <p class="text-info fw-bold">TOTAL QUESTIONS</p>
+            </div>
+            <div class="col-sm-6 col-lg-3 text-center mb-5"><img src="{% static "img/awards.png" %}" height="100" alt="..." />
+              <h1 class="my-2">{{latest_question}}</h1>
+              <p class="text-info fw-bold">LATEST QUESTIONS</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="pt-0" id="read-more">
+
+        <div class="container">
+          <div class="row h-100 align-items-center">
+            <div class="col-md-12 col-lg-12 h-100">
+              <h1 class="my-4">Why we <span class="text-primary">Exist</span></h1>
+              <p>Introducing our website, where you can take tests and quizzes in a seamless and user-friendly manner. Our platform offers a variety of pre-defined multiple-choice questions to help you test your knowledge and improve your skills in various fields.
+
+                With our website, you can choose from a range of topics and take timed tests to gauge your knowledge and improve your problem-solving abilities. Our tests are designed to be comprehensive, covering a wide range of topics and offering detailed feedback on your performance.
+                
+                Whether you're a student, a professional, or simply looking to test your knowledge, our website is the perfect place to start. Our tests are updated regularly to ensure that you have access to the latest and most relevant information in your field.
+                
+                With our intuitive user interface, you can easily navigate through our website and take tests with ease. You can also track your progress and view your results in real-time, making it easier for you to identify areas where you need to improve.
+                
+                At our website, we believe that knowledge is power, and our aim is to help you acquire knowledge and improve your skills through our comprehensive testing platform. So, whether you're looking to test your knowledge or improve your skills, visit our website today and take the first step towards achieving your goals.</p>
+            </div>
+          </div>
+        </div>
+        <!-- end of .container-->
+
+      </section>
+      <!-- <section> close ============================-->
+      <!-- ============================================-->
+
+
+
+        <div class="container">
+          <div class="row align-items-center">
+            <div class="col-md-6 col-lg-4 mb-5"><img src="{% static "img/cta.png" %}" width="280" alt="cta" /></div>
+            <div class="col-md-6 col-lg-5">
+              <h5 class="text-primary font-sans-serif fw-bold">Subscribe now</h5>
+              <h1 class="mb-5">Get every single<br>update you will get</h1>
+              <form id="subscribe-form" class="row g-0 align-items-center" action="{% url 'get_subscriber' %}" method="POST">
+                {% csrf_token %}
+                <div class="col">
+                  <div class="input-group-icon">
+                    <input class="form-control form-little-squirrel-control" id="email" name="email" type="email" placeholder="Enter email" aria-label="email"><i class="fas fa-envelope input-box-icon"></i>
+                  </div>
+                </div>
+                <div class="col-auto">
+                  <button id="subscribe-button" class="btn btn-primary rounded-0" type="submit">Subscribe now</button>
+                </div>
+              </form>
+              <p id="subscribe-message"></p>
+            </div>
+          </div>
+        </div>
+        <!-- end of .container-->
+
+      </section>
+      {% endblock %}
+      {% include "footer/footer.html" %}
+    </main>
+
+    <script>
+      function removeAlert(element) {
+        element.parentNode.parentNode.removeChild(element.parentNode);
+      }
+    </script>
+  </body>
+</html>

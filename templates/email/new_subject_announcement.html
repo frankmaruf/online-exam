@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+  <head>
+    <meta charset="UTF-8">
+    <link href="{% static 'css/theme.css' %}" rel="stylesheet"/>
+    <title>New Exam Announcement</title>
+  </head>
+  <body>
+    <p>Dear subscriber,</p>
+    <p>We are excited to announce our latest online exam: {{ subject.name }}!</p>
+    <p>Don't miss this opportunity to test your knowledge and earn a certificate!</p>
+    <p>Thank you for subscribing to our website and we hope to see you soon!</p>
+    <p>Sincerely,<br>Your website team</p>
+  </body>
+</html>

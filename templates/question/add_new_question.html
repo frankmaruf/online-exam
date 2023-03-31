@@ -1,0 +1,114 @@
+{% extends "dashmin/index.html" %} 
+{% block body %}
+<section>
+<div class="container" style="margin-top: 100px;" >
+    <div class="d-flex justify-content-end">
+            <a href="{% url 'questions' %}" class="btn btn-primary px-5 mb-5">All Questions</a>
+  
+    </div>
+    <div class="row align-items-center">
+        <form method="POST">
+            {% csrf_token %}
+            <div class="row align-items-center">
+              <div class="col-lg-8">
+                <div class="form-floating mb-3">
+                  <input type="text" class="form-control" id="floatingInput1"  name="question">
+                  <label for="floatingInput1">Question</label>
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                    <select class="form-select form-select-lg mb-3" id="subject" name="subject">
+                      {% for data in subjects %}
+                        <option value="{{data.id}}">{{data.name}}</option>
+                      {% endfor %}
+                    </select>
+                </div>
+              </div>
+            </div>
+          <div class="row align-items-center mt-2">
+            <div class="col-lg-12 col-md-12">
+                <div class="form-group">
+                    <label for="question_type"> Question Type </label>
+                    <select class="form-select form-select-lg mb-3" id="question_type" name="question_type">
+                      <option >-----</option>
+                        <option value="MCQ">MCQ</option>
+                        <option value="Long Answer">Long Answer</option>
+                      </select>
+                      <div id="mcq_fields" style="display: none">
+                        <div class="row align-items-center">
+                          <div class="btn-group" role="group">
+                            <div class="col">
+                              <input type="text" class="form-control" name="mcq_option1" id="mcq_option1">
+                              <label for="mcq_option1">MCQ Option 1</label>
+                              </div>
+                            <div class="col">
+                              <input type="text" class="form-control" name="mcq_option2" id="mcq_option2">
+                              <label for="mcq_option2">MCQ Option 2</label>
+                          </div>
+                            <div class="col">
+                              <input type="text" class="form-control" name="mcq_option3" id="mcq_option3">
+                              <label for="mcq_option3">MCQ Option 3</label>
+                          </div>
+                            <div class="col">
+                              <input type="text" class="form-control" name="mcq_option4" id="mcq_option4">
+                              <label for="mcq_option4">MCQ Option 4</label>
+                          </div>
+                            </div>
+                        </div>
+                          <div class="mt-2">
+                            <label for="right_mcq_option ">Currect MCQ Option</label>
+                          <select class="form-select form-select-lg mb-3" id="right_mcq_option" name="right_mcq_option">
+                            <option value="mcq_option1">Option 1</option>
+                            <option value="mcq_option2">Option 2</option>
+                            <option value="mcq_option3">Option 3</option>
+                            <option value="mcq_option4">Option 4</option>
+                          </select>
+                          </div>
+                      </div>
+                      <div id="long_text_field" style="display: none">
+                        <div class="form-floating mb-3">
+                          <input type="text" class="form-control"   name="answer" id="floatingInput2">
+                          <label for="floatingInput2">Enter The Answer Of the Question</label>
+                      </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary px-5 mt-3" name="submit">Save</button>
+        </form>
+    </div>
+</section>
+
+<script>
+    const mcq_fields = document.getElementById("mcq_fields");
+    const long_text_field = document.getElementById("long_text_field");
+    const question_type = document.getElementById("question_type");
+    question_type.addEventListener("change", function () {
+      if (question_type.value === "") {
+        alert("Please select Question Type.");
+        question_type.focus();
+        return false;
+      } else if (question_type.value === "MCQ") {
+        mcq_fields.style.display = "block";
+        long_text_field.style.display = "none";
+        mcq_fields.setAttribute("required", "");
+        long_text_field.removeAttribute("required");
+      } else if (question_type.value === "Long Answer") {
+        long_text_field.style.display = "block";
+        mcq_fields.style.display = "none";
+        long_text_field.setAttribute("required", "");
+        mcq_fields.removeAttribute("required");
+      }
+    });
+    {% comment %} const right_mcq_option = document.getElementById("right_mcq_option");
+    const answer_field = document.getElementById("answer_field");
+
+  right_mcq_option.addEventListener("change", function () {
+    const selected_option = right_mcq_option.options[right_mcq_option.selectedIndex].value;
+    const answer_value = document.getElementById(selected_option).value;
+    answer_field.value = answer_value;
+  }); {% endcomment %}
+  </script>
+
+{% endblock %}
