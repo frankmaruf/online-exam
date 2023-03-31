@@ -78,12 +78,12 @@ def signup(request):
             if password != confirm_password:
                 messages.warning(request,"Password doesn't match")
                 return redirect("login_user")
-            
+
             check_exist = User.objects.filter(Q(username=username) | Q(email=email))
             if check_exist:
                 messages.warning("User already exist!")
                 return redirect("signup")
-            
+
             if who_are_you == "teacher":
                 user = User.objects.create_user(username=username, email=email, first_name=first_name, last_name=last_name,password = confirm_password, is_superuser = True)
                 user.save()
@@ -365,7 +365,7 @@ def exam(request):
                     if select_mcq == question.right_mcq_option:
                         correct_answers.append(question.id)
                 if question.question_type == 'Long Answer':
-                    if answer == question.answer:
+                    if answer.lower().strip() == question.answer.lower().strip():
                         correct_answers.append(question.id)
                 else:
                     incorrect_answers.append(question.id)
@@ -393,13 +393,16 @@ def exam_result(request):
         return redirect('exam')
 
     selected_answers = SelectedAnswer.objects.filter(
-    examinee=examinee,
-        question=OuterRef('pk')
+            examinee=examinee,
+            question=OuterRef('pk'),
         ).order_by('-id')
 
     questions = Question.objects.all().annotate(
-        selected_answer=Subquery(selected_answers.values('selected_mcq_option')[:1], output_field=CharField()))
-    
+            selected_answer=Subquery(selected_answers.values('selected_mcq_option')[:1], output_field=CharField())
+        ).annotate(
+            long_answer=Subquery(selected_answers.values('selected_long_answer')[:1], output_field=CharField())
+        )
+
     context = {
         'score': examinee.score,
         "examinee": examinee,

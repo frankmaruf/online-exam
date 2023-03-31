@@ -31,7 +31,7 @@
               {% elif question.question_type == 'Long Answer' %}
                   <div class="row align-items-center">
                       <p>{{question.question}}</p>
-                      <input type="text" id="form3Example4" class="form-control form-control-lg" autocomplete="off" disabled name="question_{{question.id}}" required />
+                      <input type="text" id="form3Example4" class="form-control form-control-lg" autocomplete="off" value="{{ question.long_answer }}" disabled name="question_{{question.id}}" />
                   </div>
               {% endif %}
           {% endfor %}
