@@ -10,46 +10,46 @@
 </style>
 <section>
     <div class="container">
-      <div class="row">
-        <div style="text-align: right;">
-          <p style="color: {% if score > 33 %}green{% else %}red{% endif %}; font-size: 24px;">
-            Total Score: {{ score }}
-          </p>
-        </div>
-      </div>
       <div class="row align-items-center">
-              {% for question in questions %}
+          <div style="text-align: right;">
+              <p style="color: {% if score > 33 %}green{% else %}red{% endif %}; font-size: 24px;">
+                Total Score: {{ score }}
+              </p>
+          </div>
+          {% for question in questions %}
               {% if question.question_type == 'MCQ' %}
                   <div class="row align-items-center">
-                      <p>{{ forloop.counter }}. {{ item }} {{question.question}}</p>
-                      <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                          {% with radio_counter=forloop.counter %}
-                          <div class="col">
-                            <input type="radio" class="btn-check" name="question_{{ question.id }}" id="btnradio{{ radio_counter }}_1" value="{{ question.mcq_option1 }}" disabled {% if question.selected_answer == "mcq_option1" %}checked{% endif %} autocomplete="off">
-                            <label class="btn {% if question.right_mcq_option == "mcq_option1" %} btn-outline-success {% else %} btn-outline-danger {% endif %} for="btnradio{{ radio_counter }}_1">{{ question.mcq_option1 }}</label>
-                          </div>
-                          <div class="col">
-                            <input type="radio" class="btn-check" name="question_{{ question.id }}" id="btnradio{{ radio_counter }}_2" value="{{ question.mcq_option2 }}" disabled {% if question.selected_answer == "mcq_option2" %}checked{% endif %} autocomplete="off">
-                            <label class="btn {% if question.right_mcq_option == "mcq_option2" %} btn-outline-success {% else %} btn-outline-danger {% endif %} for="btnradio{{ radio_counter }}_2">{{question.mcq_option2}}</label>
-                          </div>
-                          <div class="col">
-                            <input type="radio" class="btn-check" name="question_{{question.id}}" id="btnradio{{ radio_counter }}_3" value="{{ question.mcq_option3 }}" disabled {% if question.selected_answer == "mcq_option3" %}checked{% endif %} autocomplete="off">
-                            <label class="btn {% if question.right_mcq_option == "mcq_option3" %} btn-outline-success {% else %} btn-outline-danger {% endif %} for="btnradio{{ radio_counter }}_3">{{question.mcq_option3}}</label>
-                          </div>
-                          <div class="col">
-                            <input type="radio" class="btn-check" name="question_{{question.id}}" id="btnradio{{ radio_counter }}_4" value="{{ question.mcq_option4 }}" disabled {% if question.selected_answer == "mcq_option4" %}checked{% endif %} autocomplete="off">
-                            <label class="btn {% if question.right_mcq_option == "mcq_option4" %} btn-outline-success {% else %} btn-outline-danger {% endif %} for="btnradio{{ radio_counter }}_4">{{question.mcq_option4}}</label>
-                          </div>
+                        <p>{{ forloop.counter }}. {{ item }} {{question.question}}</p>
+                        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                            {% with radio_counter=forloop.counter %}
+                              <div class="col">
+                                <input type="radio" class="btn-check" name="question_{{ question.id }}" id="btnradio{{ radio_counter }}_1" value="{{ question.mcq_option1 }}" disabled {% if question.selected_answer == "mcq_option1" %}checked{% endif %} autocomplete="off">
+                                <label class="btn {% if question.right_mcq_option == "mcq_option1" %} btn-outline-success {% else %} btn-outline-danger {% endif %}" for="btnradio{{ radio_counter }}_1">{{ question.mcq_option1 }} </label>
+                              </div>
+                              <div class="col">
+                                <input type="radio" class="btn-check" name="question_{{ question.id }}" id="btnradio{{ radio_counter }}_2" value="{{ question.mcq_option2 }}" disabled {% if question.selected_answer == "mcq_option2" %}checked{% endif %} autocomplete="off">
+                                <label class="btn {% if question.right_mcq_option == "mcq_option2" %} btn-outline-success {% else %} btn-outline-danger {% endif %}" for="btnradio{{ radio_counter }}_2">{{question.mcq_option2}}</label>
+                              </div>
+                              <div class="col">
+                                <input type="radio" class="btn-check" name="question_{{question.id}}" id="btnradio{{ radio_counter }}_3" value="{{ question.mcq_option3 }}" disabled {% if question.selected_answer == "mcq_option3" %}checked{% endif %} autocomplete="off">
+                                <label class="btn {% if question.right_mcq_option == "mcq_option3" %} btn-outline-success {% else %} btn-outline-danger {% endif %}" for="btnradio{{ radio_counter }}_3">{{question.mcq_option3}}</label>
+                              </div>
+                              <div class="col">
+                                <input type="radio" class="btn-check" name="question_{{question.id}}" id="btnradio{{ radio_counter }}_4" value="{{ question.mcq_option4 }}" disabled {% if question.selected_answer == "mcq_option4" %}checked{% endif %} autocomplete="off">
+                                <label class="btn {% if question.right_mcq_option == "mcq_option4" %} btn-outline-success {% else %} btn-outline-danger {% endif %}" for="btnradio{{ radio_counter }}_4">{{question.mcq_option4}}</label>
+                              </div>
                           {% endwith %}
-                      </div>
+                        </div>
                   </div>
               {% elif question.question_type == 'Long Answer' %}
               <div class="row align-items-center mb-2">
                 <div class="form-group">
                 <p> {{ forloop.counter }}. {{ item }} {{ question.question }}</p>
+                {% if question.answer|lower != question.long_answer|lower %}
                 <label for="form3Example4" class="bg-success text-white px-3 py-2 rounded">
-                  {% if question.answer|lower == question.long_answer|lower %}  {% else %}  {{question.answer}} {% endif %}
+                  {{question.answer}}
                 </label>
+                {% endif %} 
                 <div class="input-group">
                   <input type="text" id="form3Example4" class="form-control form-control-lg {% if question.answer|lower == question.long_answer|lower %}is-valid{% else %}is-invalid{% endif %}" autocomplete="off" value="{{ question.long_answer }}" disabled name="question_{{question.id}}" />
                   <div class="input-group-append">

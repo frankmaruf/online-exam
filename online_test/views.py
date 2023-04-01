@@ -67,39 +67,41 @@ def login_user(request):
 
 def signup(request):
     if request.method == 'POST':
-            first_name = request.POST.get('first_name').strip()
-            last_name = request.POST.get('last_name').strip()
-            email = request.POST.get('email').strip()
-            username = request.POST.get('username').strip()
-            password = request.POST.get('password1')
-            confirm_password = request.POST.get('password2')
-            who_are_you      = request.POST.get('who_are_you')
+        first_name = request.POST.get('first_name').strip()
+        last_name = request.POST.get('last_name').strip()
+        email = request.POST.get('email').strip()
+        username = request.POST.get('username').strip()
+        password = request.POST.get('password1')
+        confirm_password = request.POST.get('password2')
+        who_are_you      = request.POST.get('who_are_you')
 
-            if password != confirm_password:
-                messages.warning(request,"Password doesn't match")
-                return redirect("login_user")
+        if password != confirm_password:
+            messages.warning(request,"Password doesn't match")
+            return redirect("login_user")
 
-            check_exist = User.objects.filter(Q(username=username) | Q(email=email))
-            if check_exist:
-                messages.warning("User already exist!")
-                return redirect("signup")
+        check_exist = User.objects.filter(Q(username=username) | Q(email=email))
+        if check_exist:
+            messages.warning("User already exist!")
+            return redirect("signup")
 
-            if who_are_you == "teacher":
-                user = User.objects.create_user(username=username, email=email, first_name=first_name, last_name=last_name,password = confirm_password, is_superuser = True)
-                user.save()
-                Teacher.objects.create(user_id = user.id)
-            else:
-                user = User.objects.create_user(username=username, email=email, first_name=first_name, last_name=last_name,password = confirm_password)
-                user.save()
-                Examinee.objects.create(user_id = user.id)
-            authenticate(request, user=user)
-            login(request, user)
-            messages.success(request,"You Successfully Log in")
-            return redirect('subjects')
+        if who_are_you == "teacher":
+            user = User.objects.create_user(username=username, email=email, first_name=first_name, last_name=last_name,password = confirm_password, is_superuser = True)
+            user.save()
+            Teacher.objects.create(user_id = user.id)
+        else:
+            user = User.objects.create_user(username=username, email=email, first_name=first_name, last_name=last_name,password = confirm_password)
+            user.save()
+            Examinee.objects.create(user_id = user.id)
+        authenticate(request, user=user)
+        login(request, user)
+        messages.success(request,"You Successfully Log in")
+        return redirect('subjects')
     return render(request, 'authenticate/signup.html')
 
 @login_required
+@permission_required('online_test.add_subject')
 def dashboard(request):
+    top_examinees = Examinee.objects.filter(has_completed_exam=True).order_by('-score')[:10]
     examinee = Examinee.objects.count()
     total_question = Question.objects.count()
 
@@ -113,6 +115,7 @@ def dashboard(request):
         total_subject = 0
 
     context = {
+        'top_examinees': top_examinees,
         'examinee': examinee,
         'total_subject': total_subject,
         'total_question': total_question,
@@ -120,6 +123,42 @@ def dashboard(request):
     }
     return render(request,'dashmin\index.html',context)
 
+
+@login_required
+@permission_required('online_test.add_subject')
+def exam_results(request):
+    examinees = Examinee.objects.filter(has_completed_exam=True).order_by('-score')
+    context = {
+        'examinees' : examinees
+    }
+    return render(request,'exam_results.html',context)
+
+@login_required
+@permission_required('online_test.add_subject')
+def examinee_exam_result(request,pk):
+
+    examinee = get_object_or_404(Examinee,id=pk)
+    if not examinee.has_completed_exam:
+        messages.warning(request, "The examinee haven't attended the exam.")
+        return redirect('exam')
+
+    selected_answers = SelectedAnswer.objects.filter(
+            examinee=examinee,
+            question=OuterRef('pk'),
+        ).order_by('-id')
+
+    questions = Question.objects.all().annotate(
+            selected_answer=Subquery(selected_answers.values('selected_mcq_option')[:1], output_field=CharField())
+        ).annotate(
+            long_answer=Subquery(selected_answers.values('selected_long_answer')[:1], output_field=CharField())
+        )
+
+    context = {
+        'score': examinee.score,
+        "examinee": examinee,
+        "questions": questions
+        }
+    return render(request, 'exam_result.html', context)
 
 @login_required
 def logout_user(request):
@@ -132,12 +171,12 @@ def logout_user(request):
 def add_new_subject(request):
     if request.method == "POST":
         name          = request.POST.get('name').strip()
-        
+
         check_exist = Subject.objects.filter(name__icontains=name).exists()
         if check_exist:
             messages.warning(request,"Subject Already exist!")
             return redirect("add_new_subject")
-        
+
         new_subject = Subject.objects.create(
             name       = name,
         )
@@ -316,7 +355,7 @@ def edit_question(request,pk):
             mcq_option2      = mcq_option2,
             mcq_option3      = mcq_option3,
             mcq_option4      = mcq_option4,
-            
+
             question         = question,
             answer           = answer,
             subject_id       = subject
@@ -362,6 +401,7 @@ def exam(request):
         examinee = Examinee.objects.filter(user=request.user).first()
 
         if examinee.has_completed_exam:
+            messages.warning(request,"You have already participated")
             return redirect('exam_result')
 
         if request.method == 'POST':
@@ -431,13 +471,6 @@ def exam_result(request):
         "questions": questions
         }
     return render(request, 'exam_result.html', context)
-
-def exam_results(request):
-    # if request.user.is_authenticated:
-    #     examinees = Examinee.objects.all()
-
-    #     context = {'examinee': examinees}
-    return render(request, 'exam_result.html')
 
 @login_required
 @permission_required('online_test.delete_question')

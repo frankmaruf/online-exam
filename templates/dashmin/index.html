@@ -155,7 +155,7 @@
                 <div class="bg-light text-center rounded p-4">
                     <div class="d-flex align-items-center justify-content-between mb-4">
                         <h6 class="mb-0">Top 10 Examinee</h6>
-                        <a href="">Show All</a>
+                        <a href="{% url 'exam_results' %}">Show All</a>
                     </div>
                     <div class="table-responsive">
                         <table class="table text-start align-middle table-bordered table-hover mb-0">
@@ -167,11 +167,13 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                {% for top_examinee in top_examinees %}
                                 <tr>
-                                    <td>Md. Abdullah Al Maruf</td>
-                                    <td>thefrankmaruf@mail.com</td>
-                                    <td>90</td>
+                                    <td>{{top_examinee.user.first_name}} {{top_examinee.user.last_name}}</td>
+                                    <td>{{top_examinee.user.email}}</td>
+                                    <td>{{top_examinee.score}}</td>
                                 </tr>
+                                {% endfor %}
                             </tbody>
                         </table>
                     </div>
