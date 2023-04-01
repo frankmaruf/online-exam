@@ -17,6 +17,7 @@ class Question(models.Model):
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     right_mcq_option = models.CharField(max_length=25, null=True , choices=(('mcq_option1', 'Option 1'), ('mcq_option2', 'Option 2'), ('mcq_option3', 'Option 3'), ('mcq_option4', 'Option 4')))
     question_type    = models.CharField(max_length=15, choices=(('MCQ', 'MCQ'), ('Long Answer', 'Long Answer')))
+    question_level   = models.CharField(max_length=15,choices=(('High', 'High'), ('Medium', 'Medium'),('Low','Low')))
     question         = models.CharField(max_length=255)
     answer           = models.TextField(null=True)
     mcq_option1      = models.CharField(max_length=255,null=True)

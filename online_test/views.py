@@ -217,6 +217,7 @@ def add_new_question(request):
         mcq_option4 = None
         answer = None
         question_type = request.POST.get('question_type')
+        question_level = request.POST.get('question_level')
         question = request.POST.get('question').strip()
         subject = request.POST.get('subject')
 
@@ -241,12 +242,13 @@ def add_new_question(request):
             elif right_mcq_option == 'mcq_option4':
                 right_mcq_option = "mcq_option4"
 
-        elif question_type == "MCQ":
+        elif question_type == "Long Answer":
             answer = request.POST.get('answer').strip()
 
         new_question = Question.objects.create(
             right_mcq_option = right_mcq_option,
             question_type    = question_type,
+            question_level   = question_level,
             mcq_option1      = mcq_option1,
             mcq_option2      = mcq_option2,
             mcq_option3      = mcq_option3,
@@ -277,6 +279,7 @@ def edit_question(request,pk):
         mcq_option4 = None
         answer = None
         question_type = request.POST.get('question_type')
+        question_level = request.POST.get('question_level')
         question = request.POST.get('question').strip()
         subject = request.POST.get('subject')
 
@@ -308,10 +311,12 @@ def edit_question(request,pk):
         update_question = Question.objects.filter(id=pk).update(
             right_mcq_option = right_mcq_option,
             question_type    = question_type,
+            question_level   = question_level,
             mcq_option1      = mcq_option1,
             mcq_option2      = mcq_option2,
             mcq_option3      = mcq_option3,
             mcq_option4      = mcq_option4,
+            
             question         = question,
             answer           = answer,
             subject_id       = subject

@@ -1,8 +1,23 @@
 {% extends "base/base.html" %}
 {% block body %}
+<style>
+  .btn-check[disabled] + .btn, .btn-check:disabled + .btn {
+    pointer-events: none;
+    -webkit-filter: none;
+    filter: none;
+    opacity: 1.65;
+  }
+</style>
 <section>
     <div class="container">
-        <div class="row align-items-center">
+      <div class="row">
+        <div style="text-align: right;">
+          <p style="color: {% if score > 33 %}green{% else %}red{% endif %}; font-size: 24px;">
+            Total Score: {{ score }}
+          </p>
+        </div>
+      </div>
+      <div class="row align-items-center">
               {% for question in questions %}
               {% if question.question_type == 'MCQ' %}
                   <div class="row align-items-center">
@@ -30,7 +45,11 @@
                   </div>
               {% elif question.question_type == 'Long Answer' %}
               <div class="row align-items-center mb-2">
+                <div class="form-group">
                 <p> {{ forloop.counter }}. {{ item }} {{ question.question }}</p>
+                <label for="form3Example4" class="bg-success text-white px-3 py-2 rounded">
+                  {% if question.answer|lower == question.long_answer|lower %}  {% else %}  {{question.answer}} {% endif %}
+                </label>
                 <div class="input-group">
                   <input type="text" id="form3Example4" class="form-control form-control-lg {% if question.answer|lower == question.long_answer|lower %}is-valid{% else %}is-invalid{% endif %}" autocomplete="off" value="{{ question.long_answer }}" disabled name="question_{{question.id}}" />
                   <div class="input-group-append">
@@ -43,6 +62,7 @@
                     </span>
                   </div>
                 </div>
+              </div>
               </div>
               {% endif %}
           {% endfor %}

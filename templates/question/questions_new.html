@@ -23,6 +23,7 @@
                             <th scope="col">Subject</th>
                             <th scope="col">Question</th>
                             <th scope="col">Question Type</th>
+                            <th scope="col">Question Level</th>
                             <th scope="col">MCQ Options</th>
                             <th scope="col">Answer</th>
                             <th class="text-center" scope="col">Action</th>
@@ -37,6 +38,9 @@
                             </td>
                             <td>
                                 <span>{{data.question_type}}</span>
+                            </td>
+                            <td>
+                                <span>{{data.question_level}}</span>
                             </td>
                             <td>
                                 {% if data.question_type == "MCQ"%}
